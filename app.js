@@ -149,7 +149,7 @@ app.post('/registerDevice', function(req, res) {
 	type_req.end();
 });
 
-app.post('/data', function(req, res) {
+app.get('/data', function(req, res) {
         var appClient = new Client.IotfApplication(config);
 
     appClient.connect();
