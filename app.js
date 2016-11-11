@@ -8,7 +8,7 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 var appEnv = cfenv.getAppEnv();
-  var Client = require("ibmiotf");
+var Client = require("ibmiotf");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -159,15 +159,27 @@ app.get('/data', function(req, res) {
     var appClientConfig = {
                 "org": "bkoeb0",
                 id: 'gandh1',
-                "apiKey": "a-bkoeb0-8qfglllwyz",
-                "apiToken": "cAoyUIipMw?Tyuboym",
+                "auth-key": 'a-bkoeb0-8qfglllwyz',
+                "auth-token": 'cAoyUIipMw?Tyuboym',
                 "type" : "shared" // make this connection as shared subscription
     };
 
 
         var appClient = new Client.IotfApplication(appClientConfig);
 
-    appClient.connect();
+   appClient.connect();
+    //setting the log level to 'trace'
+    appClient.log.setLevel('trace');
+    appClient.on("connect", function () {
+
+    //Add your code here
+    });
+    appClient.on("error", function (err) {
+        console.log("Error : "+err);
+    });
+
+
+   /* appClient.connect();
 
     appClient.on("connect", function () {
 
@@ -178,7 +190,7 @@ app.get('/data', function(req, res) {
 
         console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
 
-    });
+    });*/
 
 /*});*/
 
