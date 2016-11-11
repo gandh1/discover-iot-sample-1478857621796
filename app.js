@@ -154,8 +154,8 @@ app.post('/registerDevice', function(req, res) {
 
 
     var appClientConfig = {
-                "org": "bkoeb0",
-                id: 'gandh1',
+                "org": basicConfig.org,
+                id: 'myapp',
                 "auth-key": 'a-bkoeb0-8qfglllwyz',
                 "auth-token": 'cAoyUIipMw?Tyuboym',
                 "type" : "shared" // make this connection as shared subscription
