@@ -149,7 +149,9 @@ app.post('/registerDevice', function(req, res) {
 	type_req.end();
 });
 
+/*
 app.get('/data', function(req, res) {
+*/
         var appClient = new Client.IotfApplication(config);
 
     appClient.connect();
@@ -165,7 +167,7 @@ app.get('/data', function(req, res) {
 
     });
 
-});
+/*});*/
 
 app.listen(appEnv.port, function() {
 	console.log("server starting on " + appEnv.url);
