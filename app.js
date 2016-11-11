@@ -8,6 +8,7 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 var appEnv = cfenv.getAppEnv();
+  var Client = require("ibmiotf");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -19,7 +20,9 @@ var cre =  {
                 "http_host": "bkoeb0.internetofthings.ibmcloud.com",
                 "org": "bkoeb0",
                 "apiKey": "a-bkoeb0-8qfglllwyz",
-                "apiToken": "cAoyUIipMw?Tyuboym"};
+                "apiToken": "cAoyUIipMw?Tyuboym"
+};
+
 
 var config = null;
 var credentials = null;
@@ -152,6 +155,8 @@ app.post('/registerDevice', function(req, res) {
 /*
 app.get('/data', function(req, res) {
 */
+
+
         var appClient = new Client.IotfApplication(config);
 
     appClient.connect();
