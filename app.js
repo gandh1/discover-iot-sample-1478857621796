@@ -152,9 +152,6 @@ app.post('/registerDevice', function(req, res) {
 	type_req.end();
 });
 
-/*
-app.get('/data', function(req, res) {
-*/
 
     var appClientConfig = {
                 "org": "bkoeb0",
@@ -170,16 +167,13 @@ app.get('/data', function(req, res) {
    appClient.connect();
     //setting the log level to 'trace'
     appClient.log.setLevel('trace');
-    appClient.on("connect", function () {
 
-    //Add your code here
-    });
     appClient.on("error", function (err) {
         console.log("Error : "+err);
     });
 
 
-   /* appClient.connect();
+appClient.connect();
 
     appClient.on("connect", function () {
 
@@ -190,9 +184,8 @@ app.get('/data', function(req, res) {
 
         console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
 
-    });*/
+    });
 
-/*});*/
 
 app.listen(appEnv.port, function() {
 	console.log("server starting on " + appEnv.url);
