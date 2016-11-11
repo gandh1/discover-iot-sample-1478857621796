@@ -156,8 +156,16 @@ app.post('/registerDevice', function(req, res) {
 app.get('/data', function(req, res) {
 */
 
+    var appClientConfig = {
+                "org": "bkoeb0",
+                id: 'gandh1',
+                "apiKey": "a-bkoeb0-8qfglllwyz",
+                "apiToken": "cAoyUIipMw?Tyuboym",
+                "type" : "shared" // make this connection as shared subscription
+    };
 
-        var appClient = new Client.IotfApplication(config);
+
+        var appClient = new Client.IotfApplication(appClientConfig);
 
     appClient.connect();
 
