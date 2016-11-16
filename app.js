@@ -189,6 +189,7 @@ app.get('/deviceData', function(req, res) {
         res.json(output);
     }*/
     req.write("test");
+    req.end();
 });
 
 app.listen(appEnv.port, function() {
