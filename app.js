@@ -57,6 +57,11 @@ var basicConfig = {
 	apiToken: credentials.apiToken
 };
 
+var deviceState = {
+	"state1": "lying",
+	"state2": "holding"
+};
+
 var options = {
 	host: 'internetofthings.ibmcloud.com',
 	port: 443,
@@ -188,7 +193,7 @@ app.get('/deviceData', function(req, res) {
     if(number < 1){
         res.json(output);
     }*/
-    res.json(payLoad);
+    res.json(payLoad.d.);
 });
 
 app.listen(appEnv.port, function() {
