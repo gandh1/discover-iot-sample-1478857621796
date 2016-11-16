@@ -188,8 +188,7 @@ app.get('/deviceData', function(req, res) {
     if(number < 1){
         res.json(output);
     }*/
-    req.write("test");
-    req.end();
+    res.json(payLoad);
 });
 
 app.listen(appEnv.port, function() {
