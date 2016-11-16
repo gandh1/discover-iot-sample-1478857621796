@@ -9,6 +9,17 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 var appEnv = cfenv.getAppEnv();
 var Client = require("ibmiotf");
+ var appClientConfig = {
+        "org": "bkoeb0",
+        "id" : "myApp",
+        "auth-key" : "a-bkoeb0-8qfglllwyz",
+        "auth-token" : "cAoyUIipMw?Tyuboym"
+    }
+
+    var appClient = new Client.IotfApplication(appClientConfig);
+
+
+var device, movement, acceleration, payLoad;
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -152,40 +163,33 @@ app.post('/registerDevice', function(req, res) {
 	type_req.end();
 });
 
-
-    var appClientConfig = {
-                "org": basicConfig.org,
-                id: 'myapp',
-                "auth-key": 'a-bkoeb0-8qfglllwyz',
-                "auth-token": 'cAoyUIipMw?Tyuboym',
-                "type" : "shared" // make this connection as shared subscription
-    };
-
-
-        var appClient = new Client.IotfApplication(appClientConfig);
-
-   appClient.connect();
-    //setting the log level to 'trace'
-    appClient.log.setLevel('trace');
-
-    appClient.on("error", function (err) {
-        console.log("Error : "+err);
-    });
-
-
-appClient.connect();
-
+    appClient.connect();
+    //Protokollebene 'trace' einstellen
+    //appClient.log.setLevel('trace');
     appClient.on("connect", function () {
-
-        appClient.subscribeToDeviceEvents("iot-phone","gandh1","+","json");
-
+         appClient.subscribeToDeviceEvents();
+         //appClient.subscribeToDeviceStatus();
     });
     appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, payload) {
 
         console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
-
+/*        device = payload.id;
+        movement = {x: payload.ax, y: payload.ay, z: payload.az};
+        acceleration = {a: payload.oa, b: payload.ob, g: payload.og};*/
+        payLoad = payload;
+    });
+    appClient.on("error", function (err) {
+        console.log("Error : "+err);
     });
 
+app.get('/deviceData', function(req, res) {
+    /*var number = parseInt(payLoad.d.ob);
+    var output = {"case1": "lying", "case2": "holding"};
+    if(number < 1){
+        res.json(output);
+    }*/
+    req.write("test");
+});
 
 app.listen(appEnv.port, function() {
 	console.log("server starting on " + appEnv.url);
