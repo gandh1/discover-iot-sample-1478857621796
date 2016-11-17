@@ -8,33 +8,13 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // for parsing application/json
 var appEnv = cfenv.getAppEnv();
+var coordinates;
+
 var Client = require("ibmiotf");
- var appClientConfig = {
-        "org": "bkoeb0",
-        "id" : "myApp",
-        "auth-key" : "a-bkoeb0-8qfglllwyz",
-        "auth-token" : "cAoyUIipMw?Tyuboym"
-    }
 
-    var appClient = new Client.IotfApplication(appClientConfig);
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"; 
 
-
-var payLoad;
-
-
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-var cre =  {
-                "iotCredentialsIdentifier": "a2g6k39sl6r5",
-                "mqtt_host": "bkoeb0.messaging.internetofthings.ibmcloud.com",
-                "mqtt_u_port": 1883,
-                "mqtt_s_port": 8883,
-                "http_host": "bkoeb0.internetofthings.ibmcloud.com",
-                "org": "bkoeb0",
-                "apiKey": "a-bkoeb0-8qfglllwyz",
-                "apiToken": "cAoyUIipMw?Tyuboym"
-};
-
+var cred = require("./cred.json");
 
 var config = null;
 var credentials = null;
@@ -48,19 +28,14 @@ if (process.env.VCAP_SERVICES) {
 		}
 	}
 } else {
-        credentials = cre;
-	console.log("ERROR: IoT Service was not bound!");
+    credentials = cred;
+	//console.log("ERROR: IoT Service was not bound!");
 }
 
 var basicConfig = {
 	org: credentials.org,
 	apiKey: credentials.apiKey,
 	apiToken: credentials.apiToken
-};
-
-var deviceState = {
-	"state1": "lying",
-	"state2": "holding"
 };
 
 var options = {
@@ -76,11 +51,11 @@ app.get('/credentials', function(req, res) {
 	res.json(basicConfig);
 });
 
-app.get('/check', function(req, res) {
-    if (payLoad !== undefined && payLoad.ax < 0.1  && payLoad.ay < 0.1 && payLoad.az < 0.8) {
-        res.text("The device is lying");
+app.get('/orientation', function(req, res) {
+    if (coordinates !== undefined && coordinates.ax < 0.1  && coordinates.ay < 0.1 && coordinates.az < 0.8) {
+        res.text("The device is lying.");
     } else {
-        res.text("The device is not lying");
+        res.text("The device is not lying.");
     }
 });
 
@@ -177,23 +152,28 @@ app.post('/registerDevice', function(req, res) {
 	type_req.end();
 });
 
-    appClient.connect();
-    appClient.on("connect", function () {
-         appClient.subscribeToDeviceEvents();
-    });
-
-
-    appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, payload) {
-
-        console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
-
-        payLoad = payload.d;
-    });
-
-    appClient.on("error", function (err) {
-        console.log("Error : "+err);
-    });
-
 app.listen(appEnv.port, function() {
 	console.log("server starting on " + appEnv.url);
+});
+
+var appClientConfig = {
+        org: basicConfig.org,
+        id: 'myapp',
+        "auth-key": credentials.apiKey,
+        "auth-token": credentials.apiToken,
+        "type" : "shared" // diese Verbindung als gemeinsam genutzte Verbindung festlegen
+    };
+    
+var appClient = new Client.IotfApplication(appClientConfig);
+
+appClient.connect();
+appClient.on("connect", function () {
+
+    appClient.subscribeToDeviceEvents("iot-phone","andi","+","json");
+
+});
+
+appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, payload) {
+    console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
+    coordinates = payload.d;
 });

@@ -1,0 +1,10 @@
+{
+                "iotCredentialsIdentifier": "a2g6k39sl6r5",
+                "mqtt_host": "bkoeb0.messaging.internetofthings.ibmcloud.com",
+                "mqtt_u_port": 1883,
+                "mqtt_s_port": 8883,
+                "http_host": "bkoeb0.internetofthings.ibmcloud.com",
+                "org": "bkoeb0",
+                "apiKey": "a-bkoeb0-8qfglllwyz",
+                "apiToken": "cAoyUIipMw?Tyuboym"
+}
