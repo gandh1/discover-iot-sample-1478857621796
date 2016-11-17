@@ -21,13 +21,6 @@ var Client = require("ibmiotf");
 
 var payLoad;
 
-app.get('/deviceData', function(req, res) {
-    if (payLoad.d !== undefined && payLoad.d.ax < 0.1  && payLoad.d.ay < 0.1 && payLoad.d.az < 0.8) {
-        res.text("The device is lying");
-    } else {
-        res.text("The device is not lying");
-    }
-});
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -81,6 +74,14 @@ var options = {
 
 app.get('/credentials', function(req, res) {
 	res.json(basicConfig);
+});
+
+app.get('/check', function(req, res) {
+    if (payLoad !== undefined && payLoad.ax < 0.1  && payLoad.ay < 0.1 && payLoad.az < 0.8) {
+        res.text("The device is lying");
+    } else {
+        res.text("The device is not lying");
+    }
 });
 
 app.get('/iotServiceLink', function(req, res) {
@@ -177,20 +178,18 @@ app.post('/registerDevice', function(req, res) {
 });
 
     appClient.connect();
-    //Protokollebene 'trace' einstellen
-    //appClient.log.setLevel('trace');
     appClient.on("connect", function () {
          appClient.subscribeToDeviceEvents();
-         //appClient.subscribeToDeviceStatus();
     });
+
+
     appClient.on("deviceEvent", function (deviceType, deviceId, eventType, format, payload) {
 
         console.log("Device Event from :: "+deviceType+" : "+deviceId+" of event "+eventType+" with payload : "+payload);
-/*        device = payload.id;
-        movement = {x: payload.ax, y: payload.ay, z: payload.az};
-        acceleration = {a: payload.oa, b: payload.ob, g: payload.og};*/
-        payLoad = payload;
+
+        payLoad = payload.d;
     });
+
     appClient.on("error", function (err) {
         console.log("Error : "+err);
     });
