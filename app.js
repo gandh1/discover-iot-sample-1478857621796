@@ -19,7 +19,15 @@ var Client = require("ibmiotf");
     var appClient = new Client.IotfApplication(appClientConfig);
 
 
-var device, movement, acceleration, payLoad;
+var payLoad;
+
+app.get('/deviceData', function(req, res) {
+    if (payLoad.d !== undefined && payLoad.d.ax < 0.1  && payLoad.d.ay < 0.1 && payLoad.d.az < 0.8) {
+        res.text("The device is lying");
+    } else {
+        res.text("The device is not lying");
+    }
+});
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -186,15 +194,6 @@ app.post('/registerDevice', function(req, res) {
     appClient.on("error", function (err) {
         console.log("Error : "+err);
     });
-
-app.get('/deviceData', function(req, res) {
-    /*var number = parseInt(payLoad.d.ob);
-    var output = {"case1": "lying", "case2": "holding"};
-    if(number < 1){
-        res.json(output);
-    }*/
-    res.json(payLoad.d.);
-});
 
 app.listen(appEnv.port, function() {
 	console.log("server starting on " + appEnv.url);
